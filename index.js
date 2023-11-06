@@ -44,11 +44,12 @@ async function run() {
 
     app.get('/foods', async(req, res) => {
         const query = req.query;
-        const sort = parseInt(query.sort) ;
-        console.log(sort);
+        const sort = parseInt(query.sort);
+        const searchQuery  = query.search;
         const result = await foodCollection.find().sort({date: sort}).toArray();
-        console.log(result)
         res.send(result);
+        console.log(sort,searchQuery);
+        
     })
 
     app.post('/foods', async(req, res) =>{
@@ -57,9 +58,6 @@ async function run() {
         const result = await foodCollection.insertOne(foodDetails);
         res.send({success: true, result});
     })
-
-
-
 
 
 
