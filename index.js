@@ -40,6 +40,7 @@ async function run() {
     await client.connect();
 
     const foodCollection = client.db("shareFood").collection("foods");
+    const foodReqCollection = client.db("shareFood").collection("reqFoods");
     
 
     app.get('/foods', async(req, res) => {
@@ -55,8 +56,7 @@ async function run() {
           result = await foodCollection.find().sort({date: sort}).toArray();
         }
         res.send(result);
-        console.log(result,sort,searchQuery);
-        
+        console.log(result,sort);
     })
 
     app.post('/foods', async(req, res) =>{
@@ -73,6 +73,19 @@ async function run() {
     })
 
 
+    app.post('/foodReq', async(req, res) =>{
+      const reqDetail = req.body;
+      const result = await foodReqCollection.insertOne(reqDetail);
+      res.send({message: true});
+    })
+
+    app.get('/userFood', async(req, res) =>{
+      const query = req.query.email;
+      console.log(query);
+      const result = await foodCollection.find({donatorEmail: query}).toArray();
+      console.log(result)
+      res.send(result);
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
