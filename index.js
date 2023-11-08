@@ -45,24 +45,21 @@ async function run() {
 
     app.get('/foods', async(req, res) => {
         const query = req.query;
-        const sort = parseInt(query.sort);
-        const searchQuery  = query.search;
+        const sort = parseInt(query.sort) || 1;
+        const searchQuery  = query.search || '';
         let result;
 
         if(searchQuery){
           result = await foodCollection.find({name: searchQuery}).toArray();
         }
-        else{
+        else if(sort){
           result = await foodCollection.find().sort({date: sort}).toArray();
+        }
+        else{
+          result = await foodCollection.find().toArray();
         }
         res.send(result);
         console.log(result,sort);
-    })
-
-    app.post('/foods', async(req, res) =>{
-        const foodDetails = req.body;
-        const result = await foodCollection.insertOne(foodDetails);
-        res.send({success: true, result});
     })
 
     app.get('/foods/:id', async(req, res) =>{
@@ -72,13 +69,46 @@ async function run() {
       res.send(result);
     })
 
+    app.post('/foods', async(req, res) =>{
+        const foodDetails = req.body;
+        const result = await foodCollection.insertOne(foodDetails);
+        res.send({success: true, result});
+    })
 
+    app.patch('/foods/:id', async(req, res) =>{
+      const id = req.params.id;
+      const updatedDoc = req.body;
+      const query = {_id: new ObjectId(id)};
+      const result = foodCollection.updateOne(query, updatedDoc) 
+    })
+
+    app.delete('/foods/:id', async(req, res) =>{
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id)};
+      const result = await foodCollection.deleteOne(query);
+      res.send(result)
+    })
+
+
+    // food req api
+    app.get('/foodReq', async(req, res) =>{
+      const query = req.query.foodId;
+      console.log("query req,", )
+      const  result = await foodReqCollection.find({foodId: query}).toArray();
+      console.log(result, query, ': query req: ');
+      res.send(result);
+    })
+
+    
     app.post('/foodReq', async(req, res) =>{
       const reqDetail = req.body;
       const result = await foodReqCollection.insertOne(reqDetail);
       res.send({message: true});
     })
 
+
+    
+    // this will get foods according to their email
     app.get('/userFood', async(req, res) =>{
       const query = req.query.email;
       console.log(query);
