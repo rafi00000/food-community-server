@@ -57,6 +57,11 @@ async function run() {
       console.log(result, sort);
     });
 
+    app.get('/food/high', async(req, res) =>{
+      const result = await foodCollection.find().sort({foodQuantity: -1}).toArray();
+      res.send(result)
+    })
+
     app.get("/foods/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
