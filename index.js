@@ -35,7 +35,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const foodCollection = client.db("shareFood").collection("foods");
     const foodReqCollection = client.db("shareFood").collection("reqFoods");
@@ -75,11 +75,32 @@ async function run() {
       res.send({ success: true, result });
     });
 
+    app.put('/foods/:id', async(req, res) =>{
+      const id = req.params.id;
+      const foodData = req.body;
+      const filter = {_id: new ObjectId(id) };
+      const options = {upsert: true}
+      const updatedFood = {
+        $set: {
+          name: foodData.name,
+          foodUrl: foodData.foodUrl,
+          foodQuantity: foodData.foodQuantity,
+          location: foodData.location,
+          date: foodData.date,
+          notes: foodData.notes,
+          status: foodData.status,
+        }
+      }
+      const result = await foodCollection.updateOne(filter, updatedFood, options);
+      res.send(result);
+    })
+    
     app.patch("/foods/:id", async (req, res) => {
       const id = req.params.id;
       const updatedDoc = req.body;
       const query = { _id: new ObjectId(id) };
       const result = foodCollection.updateOne(query, updatedDoc);
+      res.send(result);
     });
 
     app.delete("/foods/:id", async (req, res) => {
@@ -93,12 +114,12 @@ async function run() {
 
 
     // food req api
+
     // manage food req (how many have req for this)
     app.get("/foodReq", async (req, res) => {
       const query = req.query.foodId;
       console.log("query req,");
       const result = await foodReqCollection.find({ foodId: query }).toArray();
-      console.log(result, query, ": query req: ");
       res.send(result);
     });
 
@@ -119,6 +140,13 @@ async function run() {
       console.log(result);
       res.send(result);
     });
+
+    app.get('/userFoodReq', async(req, res) =>{
+      const query = req.query.email;
+      const result = await foodReqCollection.find({email: query}).toArray();
+      console.log(result)
+      res.send(result);
+    })
 
     app.patch('/updateFood/:reqId', async(req, res) =>{
       const reqId = req.params.reqId;
