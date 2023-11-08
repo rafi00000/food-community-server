@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://b8a11-client-side-rafi00000.vercel.app", "https://b8a11-client-side-rafi00000-4rkfxux7c-nothing-team-pr.vercel.app"],
   })
 );
 app.use(express.json());
