@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:5173", "https://b8a11-client-side-rafi00000.vercel.app", "https://b8a11-client-side-rafi00000-4rkfxux7c-nothing-team-pr.vercel.app"],
+    origin: ["b8a11-client-side-rafi00000.vercel.app", "http://localhost:5173"],
   })
 );
 app.use(express.json());
@@ -116,10 +116,24 @@ async function run() {
     // food req api
 
     // manage food req (how many have req for this)
-    app.get("/foodReq", async (req, res) => {
+    app.get("/foodReq", async(req, res) => {
       const query = req.query.foodId;
       console.log("query req,");
-      const result = await foodReqCollection.find({ foodId: query }).toArray();
+      let result;
+      if(query){
+        result = await foodReqCollection.find({ foodId: query }).toArray();
+      }
+      result = await foodReqCollection.find().toArray();
+      res.send(result);
+    });
+
+
+    app.delete("/foodsReq/:id", async(req, res) => {
+      const id = req.params.id;
+      console.log(id)
+      const query = { _id: new ObjectId(id) };
+      console.log(query);
+      const result = await foodCollection.deleteOne(query);
       res.send(result);
     });
 
