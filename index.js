@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 app.use(
   cors({
     credentials: true,
-    origin: ["b8a11-client-side-rafi00000.vercel.app", "http://localhost:5173"],
+    origin: ["https://labored-class.surge.sh"],
   })
 );
 app.use(express.json());
