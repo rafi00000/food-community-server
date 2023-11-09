@@ -133,7 +133,8 @@ async function run() {
       console.log(id)
       const query = { _id: new ObjectId(id) };
       console.log(query);
-      const result = await foodCollection.deleteOne(query);
+      const result = await foodReqCollection.deleteOne(query);
+      console.log(result)
       res.send(result);
     });
 
