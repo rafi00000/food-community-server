@@ -118,12 +118,11 @@ async function run() {
     // manage food req (how many have req for this)
     app.get("/foodReq", async(req, res) => {
       const query = req.query.foodId;
-      console.log("query req,");
+      console.log(query)
+      console.log("query req: ");
       let result;
-      if(query){
-        result = await foodReqCollection.find({ foodId: query }).toArray();
-      }
-      result = await foodReqCollection.find().toArray();
+      result = await foodReqCollection.find({ foodId: query }).toArray();
+      console.log(result)
       res.send(result);
     });
 
