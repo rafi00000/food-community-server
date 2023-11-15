@@ -1,16 +1,16 @@
 const express = require("express");
-const app = express();
-const cors = require("cors");
 require("dotenv").config();
+const cors = require("cors");
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
+const app = express();
 const port = process.env.PORT || 5000;
 
 // middleware below
 app.use(
   cors({
-    credentials: true,
     origin: ["https://labored-class.surge.sh"],
+    credentials: true,
   })
 );
 app.use(express.json());
@@ -35,7 +35,6 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    // await client.connect();
 
     const foodCollection = client.db("shareFood").collection("foods");
     const foodReqCollection = client.db("shareFood").collection("reqFoods");
@@ -184,7 +183,6 @@ async function run() {
     );
   } finally {
     // Ensures that the client will close when you finish/error
-    // await client.close();
   }
 }
 run().catch(console.dir);
