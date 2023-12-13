@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 // middleware below
 app.use(
   cors({
-    origin: ["https://labored-class.surge.sh"],
+    origin: ["https://labored-class.surge.sh", "http://localhost:5173"],
     credentials: true,
   })
 );
@@ -22,7 +22,7 @@ app.use(express.json());
 // ----------------------
 
 // 1. connecting to the db
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.irfnbkn.mongodb.net/?retryWrites=true&w=majority`;
+const uri = "mongodb+srv://rafi2021bd:koajaibona1@cluster0.irfnbkn.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -38,6 +38,7 @@ async function run() {
 
     const foodCollection = client.db("shareFood").collection("foods");
     const foodReqCollection = client.db("shareFood").collection("reqFoods");
+    const feedbackCollection = client.db("shareFood").collection("review");
 
     app.get("/foods", async (req, res) => {
       const query = req.query;
@@ -60,6 +61,18 @@ async function run() {
       const result = await foodCollection.find().sort({foodQuantity: -1}).toArray();
       res.send(result)
     })
+
+    app.get('/all-data', async(req, res) =>{
+      const totalFood = await foodCollection.estimatedDocumentCount();
+      const totalReq = await foodReqCollection.estimatedDocumentCount();
+    })
+
+    app.post('/feedback', async(req, res) =>{
+      const data = req.body;
+      console.log(data);
+      const result = await feedbackCollection.insertOne(data);
+      res.send(result);
+    });
 
     app.get("/foods/:id", async (req, res) => {
       const id = req.params.id;
