@@ -74,6 +74,31 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/feedback'), async(req, res) =>{
+      const result = await feedbackCollection.find().toArray();
+      req.send(result);
+    }
+
+    // most food get by user
+    app.get('/leaderBoard', async(req, res) =>{
+      const pipeline = [
+        {
+          $group: {
+            _id: '$donatorEmail',
+            totalFoodDonated: {$sum: '$foodQuantity'}
+          }
+        },
+        {
+          $sort: {
+            totalFoodDonated: -1
+          }
+        }
+      ];
+
+      const result = await foodCollection.aggregate(pipeline).toArray();
+      res.send(result)
+    })
+
     app.get("/foods/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
