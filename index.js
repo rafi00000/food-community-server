@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 // middleware below
 app.use(
   cors({
-    origin: ["https://labored-class.surge.sh", "http://localhost:5173"],
+    origin: ["https://labored-class.surge.sh", "http://localhost:5173", "https://food-community-client.vercel.app"],
     credentials: true,
   })
 );
