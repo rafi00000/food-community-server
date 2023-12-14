@@ -62,16 +62,19 @@ async function run() {
       res.send(result)
     })
 
-    app.get('/all-data', async(req, res) =>{
-      const totalFood = await foodCollection.estimatedDocumentCount();
-      const totalReq = await foodReqCollection.estimatedDocumentCount();
-    })
 
     app.post('/feedback', async(req, res) =>{
       const data = req.body;
-      console.log(data);
       const result = await feedbackCollection.insertOne(data);
       res.send(result);
+    });
+
+    app.get('/feedback', async(req, res) =>{
+      console.log("hit")
+      const result = await feedbackCollection.find().toArray();
+      console.log(result)
+      res.send(result);
+
     });
 
     app.get('/feedback'), async(req, res) =>{
