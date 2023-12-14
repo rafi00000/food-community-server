@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 // middleware below
 app.use(
   cors({
-    origin: ["https://food-community-client.vercel.app"],
+    origin: ["https://food-community-client.vercel.app", "http://localhost:5173"],
     credentials: true,
   })
 );
